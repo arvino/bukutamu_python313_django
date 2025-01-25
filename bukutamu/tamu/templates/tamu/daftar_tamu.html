@@ -1,0 +1,50 @@
+{% extends 'tamu/base.html' %}
+
+{% block title %}Daftar Tamu{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h2>Daftar Tamu</h2>
+    </div>
+    <div class="col text-end">
+        <a href="{% url 'tambah_tamu' %}" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Tambah Tamu Baru
+        </a>
+    </div>
+</div>
+
+{% if tamu_list %}
+    <div class="row">
+        {% for tamu in tamu_list %}
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ tamu.nama }}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">
+                        <i class="bi bi-envelope"></i> {{ tamu.email }}
+                    </h6>
+                    <p class="card-text">{{ tamu.pesan }}</p>
+                    <small class="text-muted">
+                        <i class="bi bi-clock"></i> {{ tamu.tanggal|date:"d M Y H:i" }}
+                    </small>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-info">
+        Belum ada tamu yang tercatat. Silakan tambahkan tamu baru.
+    </div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    // Animasi fade in untuk card
+    $('.card').hide().fadeIn(1000);
+});
+</script>
+{% endblock %} 
