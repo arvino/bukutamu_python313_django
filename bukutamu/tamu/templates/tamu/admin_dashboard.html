@@ -1,0 +1,223 @@
+{% extends 'tamu/base.html' %}
+
+{% block title %}Dashboard Admin{% endblock %}
+
+{% block content %}
+<ul class="nav nav-tabs mb-4">
+    <li class="nav-item">
+        <a class="nav-link active" data-bs-toggle="tab" href="#entries">Buku Tamu</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" data-bs-toggle="tab" href="#members">Member</a>
+    </li>
+</ul>
+
+<div class="tab-content">
+    <!-- Tab Buku Tamu -->
+    <div class="tab-pane fade show active" id="entries">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Daftar Buku Tamu</h5>
+                <div class="input-group w-25">
+                    <input type="text" id="searchEntries" class="form-control" placeholder="Cari...">
+                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">
+                        <i class="bi bi-download"></i> Export
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'export_csv' %}">CSV</a></li>
+                        <li><a class="dropdown-item" href="{% url 'export_excel' %}">Excel</a></li>
+                        <li><a class="dropdown-item" href="{% url 'export_pdf' %}">PDF</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover" id="entriesTable">
+                        <thead>
+                            <tr>
+                                <th>Tanggal</th>
+                                <th>Member</th>
+                                <th>Pesan</th>
+                                <th>Gambar</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for entry in entries %}
+                            <tr>
+                                <td>{{ entry.timestamp|date:"d M Y H:i" }}</td>
+                                <td>{{ entry.member.username }}</td>
+                                <td>{{ entry.messages|truncatechars:50 }}</td>
+                                <td>
+                                    {% if entry.gambar %}
+                                    <img src="{{ entry.gambar.url }}" alt="Gambar" style="height: 50px;">
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-danger delete-entry" 
+                                            data-id="{{ entry.id }}"
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#deleteModal">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-secondary" 
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#viewModal{{ entry.id }}">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tab Member -->
+    <div class="tab-pane fade" id="members">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Daftar Member</h5>
+                <div class="input-group w-25">
+                    <input type="text" id="searchMembers" class="form-control" placeholder="Cari...">
+                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover" id="membersTable">
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>No. Telepon</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for member in members %}
+                            <tr>
+                                <td>{{ member.username }}</td>
+                                <td>{{ member.email }}</td>
+                                <td>{{ member.phone }}</td>
+                                <td>
+                                    <span class="badge bg-success">Aktif</span>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-danger delete-member" 
+                                            data-id="{{ member.id }}"
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#deleteMemberModal">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Delete Entry -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Konfirmasi Hapus</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Apakah Anda yakin ingin menghapus pesan ini?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                <button type="button" class="btn btn-danger" id="confirmDelete">Hapus</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Delete Member -->
+<div class="modal fade" id="deleteMemberModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Konfirmasi Hapus Member</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Apakah Anda yakin ingin menghapus member ini?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteMember">Hapus</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    // Search functionality for entries
+    $("#searchEntries").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#entriesTable tbody tr").filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
+
+    // Search functionality for members
+    $("#searchMembers").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#membersTable tbody tr").filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
+
+    // Delete entry handling
+    let entryIdToDelete;
+    $('.delete-entry').click(function() {
+        entryIdToDelete = $(this).data('id');
+    });
+
+    $('#confirmDelete').click(function() {
+        // Add AJAX call to delete entry
+        $.ajax({
+            url: '/api/bukutamu/' + entryIdToDelete + '/',
+            method: 'DELETE',
+            success: function() {
+                location.reload();
+            }
+        });
+    });
+
+    // Delete member handling
+    let memberIdToDelete;
+    $('.delete-member').click(function() {
+        memberIdToDelete = $(this).data('id');
+    });
+
+    $('#confirmDeleteMember').click(function() {
+        // Add AJAX call to delete member
+        $.ajax({
+            url: '/api/members/' + memberIdToDelete + '/',
+            method: 'DELETE',
+            success: function() {
+                location.reload();
+            }
+        });
+    });
+});
+</script>
+{% endblock %} 

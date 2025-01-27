@@ -1,26 +1,104 @@
 # Aplikasi Buku Tamu Django
 
-Aplikasi buku tamu sederhana yang dibuat menggunakan Django, MySQL, Bootstrap 5, dan jQuery.
+Aplikasi buku tamu berbasis web menggunakan Django dan MySQL dengan fitur member dan admin.
 
-## Persyaratan Sistem
+## Overview Aplikasi
 
-- Python 3.13
-- Django
-- MySQL
-- mysqlclient
+Aplikasi Buku Tamu ini memiliki beberapa fitur utama:
+
+### Fitur Publik
+- Halaman publik untuk melihat daftar pesan tamu
+- Tampilan responsif dengan Bootstrap 5
+- Dukungan upload gambar untuk setiap pesan
+
+### Fitur Member
+- Sistem autentikasi (login/register)
+- Dashboard khusus member
+- Pembatasan posting (1x sehari)
+- Edit dan hapus pesan sendiri
+- Update profil member
+
+### Fitur Admin
+- Dashboard admin untuk manajemen data
+- Export data ke CSV, Excel dan PDF
+- Manajemen member dan pesan
+- Statistik penggunaan
+
+### Fitur Notifikasi
+- Notifikasi email untuk member baru
+- Notifikasi Telegram untuk pesan baru
+- Email notifikasi ke admin
+
+### API & Integrasi
+- REST API dengan JWT auth
+- Integrasi Telegram Bot
+- Upload gambar dengan preview
 
 ## Teknologi yang Digunakan
 
-- Django - Web framework
-- MySQL - Database
-- Bootstrap 5 - Frontend framework
-- jQuery 3.7.1 - JavaScript library
-- Bootstrap Icons - Icon library
+- Python 3.13
+- Django 4.2
+- MySQL/MariaDB
+- Bootstrap 5
+- jQuery 3.7.1
+- REST Framework
+- JWT Authentication
+- Bootstrap Icons
 
-## Instalasi
+## Setup Environment
 
-1. Clone repositori ini
-2. Buat virtual environment (opsional tapi direkomendasikan):
+### Prasyarat
+1. Python 3.13
+2. MySQL/MariaDB
+3. Visual Studio Code
+4. Git
+
+### Setup VSCode
+
+1. Install ekstensi yang diperlukan:
+   - Python (ms-python.python)
+   - Django (batisteo.vscode-django)
+   - MySQL (cweijan.vscode-mysql-client2)
+   - Git (eamodio.gitlens)
+   - Live Server (ritwickdey.liveserver)
+
+2. Konfigurasi ekstensi Python:
+   ```json
+   {
+     "python.linting.enabled": true,
+     "python.linting.pylintEnabled": true,
+     "python.formatting.provider": "black",
+     "python.formatting.blackArgs": ["--line-length", "100"],
+     "editor.formatOnSave": true,
+     "[python]": {
+       "editor.defaultFormatter": "ms-python.python"
+     }
+   }
+   ```
+
+3. Setup Git di VSCode:
+   - Login ke GitHub
+   - Konfigurasi user.name dan user.email
+   - Setup SSH key jika diperlukan
+
+### Setup Database
+1. Buat database baru:
+```sql
+CREATE DATABASE bukutamu_django;
+CREATE USER 'arvino'@'localhost' IDENTIFIED BY 'arvino1345';
+GRANT ALL PRIVILEGES ON bukutamu_django.* TO 'arvino'@'localhost';
+FLUSH PRIVILEGES;
+```
+
+## Setup Aplikasi
+
+1. Clone repositori:
+```bash
+git clone https://github.com/arvino/bukutamu-django.git
+cd bukutamu-django
+```
+
+2. Buat virtual environment:
 ```bash
 python -m venv venv
 source venv/bin/activate  # Linux/Mac
@@ -29,114 +107,131 @@ venv\Scripts\activate     # Windows
 
 3. Install dependensi:
 ```bash
-pip install django mysqlclient
+pip install -r requirements.txt
 ```
 
-4. Buat database MySQL:
-```sql
-CREATE DATABASE bukutamu_django;
+4. Setup environment variables (.env):
+```
+SECRET_KEY=your-secret-key-here
+DEBUG=True
+DB_NAME=bukutamu_django
+DB_USER=arvino
+DB_PASSWORD=arvino1345
+DB_HOST=localhost
+DB_PORT=3306
+TELEGRAM_BOT_TOKEN=your_bot_token
+TELEGRAM_CHAT_ID=your_chat_id
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_USER=your_email@gmail.com
+EMAIL_PASSWORD=your_app_password
 ```
 
-5. Sesuaikan konfigurasi database di `bukutamu/settings.py` jika diperlukan:
-```python
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'bukutamu_django',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': 'localhost',
-        'PORT': '3306',
-    }
-}
-```
-
-6. Jalankan migrasi:
+5. Jalankan migrasi:
 ```bash
 python manage.py makemigrations
 python manage.py migrate
 ```
 
-7. Jalankan server development:
+6. Buat superuser:
+```bash
+python manage.py createsuperuser
+```
+
+7. Jalankan server:
 ```bash
 python manage.py runserver
 ```
 
-## Penggunaan
+## Flow Aplikasi
 
-Buka browser dan akses:
-- http://localhost:8000/ - untuk melihat daftar tamu
-- http://localhost:8000/tambah/ - untuk menambah tamu baru
+### 1. Flow Pengunjung
+- Mengakses halaman utama (/)
+- Melihat daftar pesan tamu
+- Melihat detail pesan dan gambar
+- Opsi untuk register/login
 
-## Fitur
+### 2. Flow Member
+- Register akun baru
+  - Isi form registrasi
+  - Terima email selamat datang
+  - Login dengan akun baru
+- Login ke dashboard member
+  - Lihat riwayat pesan
+  - Submit pesan baru (1x sehari)
+  - Upload gambar dengan preview
+  - Edit/hapus pesan sendiri
+- Update profil
+  - Edit informasi pribadi
+  - Ganti password
 
-- Menampilkan daftar tamu dalam layout card responsif
-- Form input tamu dengan validasi
-- Pencatatan waktu otomatis
-- Tampilan modern dengan Bootstrap 5
-- Animasi dan efek visual dengan jQuery
-- Navigasi responsif
-- Validasi form client-side
-- Feedback visual untuk interaksi pengguna
-- Icon untuk meningkatkan UX
+### 3. Flow Admin
+- Login sebagai admin
+- Akses dashboard admin
+  - Lihat semua pesan
+  - Filter dan cari pesan
+  - Export data (CSV/Excel/PDF)
+- Manajemen member
+  - Lihat daftar member
+  - Aktifkan/nonaktifkan member
+  - Reset password member
+- Terima notifikasi
+  - Email untuk member baru
+  - Telegram untuk pesan baru
 
-## Struktur Proyek
+### 4. Flow API
+- Autentikasi dengan JWT
+- Akses endpoint CRUD
+- Upload file via API
+- Refresh token
 
-```
-bukutamu/
-├── bukutamu/           # Konfigurasi utama proyek
-│   ├── settings.py     # Pengaturan proyek
-│   └── urls.py         # URL routing
-└── tamu/               # Aplikasi tamu
-    ├── models.py       # Model database
-    ├── views.py        # Logic aplikasi
-    ├── forms.py        # Form input
-    └── templates/      # Template HTML
-        └── tamu/
-            ├── base.html         # Template dasar
-            ├── daftar_tamu.html  # Halaman daftar
-            └── tambah_tamu.html  # Form tambah
-```
+## Struktur Database
 
-## Komponen Frontend
+### Tabel Member
+- nama (CharField)
+- phone (CharField)
+- email (EmailField)
+- password (CharField)
+- role (CharField)
 
-- **Bootstrap 5**: Framework CSS untuk tampilan responsif
-- **jQuery**: Library JavaScript untuk manipulasi DOM dan animasi
-- **Bootstrap Icons**: Library icon untuk UI
-- **Custom CSS**: Styling tambahan untuk penyesuaian tampilan
-- **Custom JavaScript**: Validasi form dan animasi
+### Tabel BukuTamu
+- member_id (ForeignKey)
+- messages (TextField)
+- gambar (ImageField)
+- timestamp (DateTimeField)
+
+## API Endpoints
+
+- `POST /api/token/` - Mendapatkan token JWT
+- `POST /api/token/refresh/` - Refresh token JWT
+- `GET /api/bukutamu/` - List semua pesan
+- `POST /api/bukutamu/` - Tambah pesan baru
+- `GET /api/bukutamu/{id}/` - Detail pesan
+- `PUT /api/bukutamu/{id}/` - Update pesan
+- `DELETE /api/bukutamu/{id}/` - Hapus pesan
+- `GET /api/members/` - List member (admin only)
 
 ## Pengembangan Selanjutnya
 
-Beberapa fitur yang bisa ditambahkan:
-- Autentikasi pengguna
-- Validasi form yang lebih lengkap
-- Fitur edit dan hapus data
-- Pencarian dan filter data
-- Pagination untuk daftar tamu
+- Implementasi email verification
+- Fitur lupa password
 - Export data ke PDF/Excel
-- API endpoint
+- Integrasi dengan media sosial
+- Sistem komentar
+- Notifikasi real-time
 - Unit testing
-- Dark mode theme
-- Integrasi dengan layanan email
-- Captcha untuk keamanan form
+- Deployment guide
 
 ## Kontribusi
 
-Silakan berkontribusi dengan:
-1. Fork repositori
-2. Buat branch fitur (`git checkout -b fitur-baru`)
-3. Commit perubahan (`git commit -am 'Menambah fitur baru'`)
-4. Push ke branch (`git push origin fitur-baru`)
-5. Buat Pull Request
+Silakan berkontribusi dengan membuat pull request atau melaporkan issue.
 
 ## Lisensi
 
 [MIT License](LICENSE)
 
-## Kredit
-
-- [Bootstrap](https://getbootstrap.com/)
-- [jQuery](https://jquery.com/)
-- [Bootstrap Icons](https://icons.getbootstrap.com/)
-- [Django](https://www.djangoproject.com/)
+## Dibuat Oleh
+- Developer Name : Arvino Zulka
+- Email: arvinozulka@gmail.com 
+- Website: https://www.arvino.my.id/
+- GitHub: https://github.com/arvino

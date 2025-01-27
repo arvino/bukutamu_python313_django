@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: #007bff; color: white; padding: 20px; text-align: center; }
+        .content { padding: 20px; }
+        .footer { text-align: center; padding: 20px; color: #666; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Selamat Datang di Buku Tamu</h1>
+        </div>
+        <div class="content">
+            <p>Halo {{ user.username }},</p>
+            <p>Terima kasih telah mendaftar di aplikasi Buku Tamu kami. Akun Anda telah berhasil dibuat.</p>
+            <p>Anda sekarang dapat:</p>
+            <ul>
+                <li>Menulis pesan di buku tamu (1x sehari)</li>
+                <li>Mengedit pesan Anda</li>
+                <li>Melihat riwayat pesan Anda</li>
+            </ul>
+            <p>Silakan login dengan kredensial Anda untuk mulai menggunakan aplikasi.</p>
+        </div>
+        <div class="footer">
+            <p>&copy; 2024 Buku Tamu - Dibuat oleh <a href="https://www.arvino.my.id/">Arvino Zulka</a></p>
+        </div>
+    </div>
+</body>
+</html> 

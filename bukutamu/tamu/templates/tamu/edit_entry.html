@@ -1,0 +1,89 @@
+{% extends 'tamu/base.html' %}
+
+{% block title %}Edit Pesan{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">Edit Pesan</h4>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data" id="editForm">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.messages.id_for_label }}" class="form-label">Pesan</label>
+                        {{ form.messages }}
+                        {% if form.messages.errors %}
+                            {% for error in form.messages.errors %}
+                                <div class="invalid-feedback d-block">{{ error }}</div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.gambar.id_for_label }}" class="form-label">Gambar</label>
+                        {% if entry.gambar %}
+                            <div class="mb-2">
+                                <img src="{{ entry.gambar.url }}" alt="Current Image" class="img-fluid" style="max-height: 200px;">
+                            </div>
+                        {% endif %}
+                        {{ form.gambar }}
+                        <div id="imagePreview" class="mt-2"></div>
+                        {% if form.gambar.errors %}
+                            {% for error in form.gambar.errors %}
+                                <div class="invalid-feedback d-block">{{ error }}</div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-save"></i> Simpan Perubahan
+                        </button>
+                        <a href="{% url 'member_dashboard' %}" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left"></i> Batal
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    // Preview gambar baru sebelum upload
+    $('#{{ form.gambar.id_for_label }}').change(function() {
+        const file = this.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                $('#imagePreview').html(`
+                    <img src="${e.target.result}" class="img-fluid" style="max-height: 200px;">
+                `);
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Validasi form
+    $('#editForm').on('submit', function(e) {
+        if (!$('#{{ form.messages.id_for_label }}').val()) {
+            e.preventDefault();
+            alert('Pesan tidak boleh kosong!');
+            $('#{{ form.messages.id_for_label }}').addClass('is-invalid');
+        }
+    });
+
+    // Hapus class is-invalid saat input diubah
+    $('#{{ form.messages.id_for_label }}').on('input', function() {
+        $(this).removeClass('is-invalid');
+    });
+});
+</script>
+{% endblock %} 

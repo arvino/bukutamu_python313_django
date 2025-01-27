@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: #28a745; color: white; padding: 20px; text-align: center; }
+        .content { padding: 20px; }
+        .message { background: #f8f9fa; padding: 15px; margin: 15px 0; border-radius: 5px; }
+        .footer { text-align: center; padding: 20px; color: #666; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Pesan Buku Tamu Baru</h1>
+        </div>
+        <div class="content">
+            <p>Ada pesan baru di Buku Tamu:</p>
+            <div class="message">
+                <p><strong>Dari:</strong> {{ entry.member.username }}</p>
+                <p><strong>Email:</strong> {{ entry.member.email }}</p>
+                <p><strong>Tanggal:</strong> {{ entry.timestamp|date:"d M Y H:i" }}</p>
+                <p><strong>Pesan:</strong></p>
+                <p>{{ entry.messages }}</p>
+                {% if entry.gambar %}
+                <p><strong>Gambar:</strong> Terlampir</p>
+                {% endif %}
+            </div>
+            <p>Silakan login ke dashboard admin untuk melihat detail lengkap.</p>
+        </div>
+        <div class="footer">
+            <p>&copy; 2024 Buku Tamu - Dibuat oleh <a href="https://www.arvino.my.id/">Arvino Zulka</a></p>
+        </div>
+    </div>
+</body>
+</html> 

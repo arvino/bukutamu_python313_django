@@ -1,27 +1,38 @@
 from django import forms
-from .models import Tamu
+from django.contrib.auth.forms import UserCreationForm
+from .models import Member, BukuTamu
 
-class TamuForm(forms.ModelForm):
+class MemberRegistrationForm(UserCreationForm):
     class Meta:
-        model = Tamu
-        fields = ['nama', 'email', 'pesan']
+        model = Member
+        fields = ('email', 'username', 'phone', 'password1', 'password2')
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if Member.objects.filter(email=email).exists():
+            raise forms.ValidationError('Email sudah terdaftar')
+        return email
+
+class BukuTamuForm(forms.ModelForm):
+    class Meta:
+        model = BukuTamu
+        fields = ['messages', 'gambar']
         widgets = {
-            'nama': forms.TextInput(attrs={
+            'messages': forms.Textarea(attrs={
                 'class': 'form-control',
-                'placeholder': 'Masukkan nama lengkap'
+                'rows': 4,
+                'placeholder': 'Tulis pesan Anda di sini'
             }),
-            'email': forms.EmailInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Masukkan alamat email'
-            }),
-            'pesan': forms.Textarea(attrs={
-                'class': 'form-control',
-                'placeholder': 'Tulis pesan Anda di sini',
-                'rows': 4
+            'gambar': forms.FileInput(attrs={
+                'class': 'form-control'
             })
         }
-        labels = {
-            'nama': 'Nama Lengkap',
-            'email': 'Alamat Email',
-            'pesan': 'Pesan'
+
+class MemberUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Member
+        fields = ['username', 'phone']
+        widgets = {
+            'username': forms.TextInput(attrs={'class': 'form-control'}),
+            'phone': forms.TextInput(attrs={'class': 'form-control'})
         } 

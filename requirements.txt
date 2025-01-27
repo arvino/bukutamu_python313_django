@@ -1,0 +1,9 @@
+Django==4.2.0
+mysqlclient==2.2.0
+djangorestframework==3.14.0
+djangorestframework-simplejwt==5.3.0
+Pillow==10.0.0  # Untuk menangani upload gambar
+python-dotenv==1.0.0  # Untuk mengelola environment variables
+django-cors-headers==4.2.0  # Untuk API CORS 
+XlsxWriter==3.1.2
+reportlab==4.0.4 
