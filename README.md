@@ -222,6 +222,113 @@ python manage.py runserver
 - Unit testing
 - Deployment guide
 
+
+## Struktur File Proyek
+
+```
+bukutamu/
+├── bukutamu/                  # Project root
+│   ├── __init__.py
+│   ├── settings.py           # Konfigurasi proyek
+│   ├── urls.py              # URL router utama
+│   ├── asgi.py             # ASGI config
+│   └── wsgi.py             # WSGI config
+│
+├── tamu/                     # Aplikasi utama
+│   ├── migrations/          # Database migrations
+│   ├── templates/          # Template HTML
+│   │   ├── tamu/
+│   │   │   ├── base.html              # Template dasar
+│   │   │   ├── public_list.html       # Halaman publik
+│   │   │   ├── register.html          # Form registrasi
+│   │   │   ├── member_dashboard.html  # Dashboard member
+│   │   │   ├── admin_dashboard.html   # Dashboard admin
+│   │   │   ├── submit_entry.html      # Form input pesan
+│   │   │   ├── edit_entry.html        # Form edit pesan
+│   │   │   └── profile.html           # Halaman profil
+│   │   ├── registration/
+│   │   │   └── login.html             # Form login
+│   │   └── emails/
+│   │       ├── welcome.html           # Template email welcome
+│   │       └── new_entry.html         # Template notifikasi
+│   │
+│   ├── static/             # File statis
+│   │   ├── css/
+│   │   ├── js/
+│   │   └── img/
+│   │
+│   ├── __init__.py
+│   ├── admin.py           # Konfigurasi admin
+│   ├── apps.py           # Konfigurasi aplikasi
+│   ├── forms.py          # Form definitions
+│   ├── models.py         # Model database
+│   ├── views.py          # View handlers
+│   ├── urls.py           # URL patterns
+│   ├── api_urls.py       # API endpoints
+│   ├── permissions.py    # Custom permissions
+│   ├── serializers.py    # API serializers
+│   ├── middleware.py     # Custom middleware
+│   ├── utils.py          # Utility functions
+│   ├── notifications.py  # Notification handlers
+│   └── context_processors.py  # Template context
+│
+├── media/                # Upload files
+│   └── bukutamu/        # Gambar pesan
+│
+├── static/              # Project static files
+│   ├── css/
+│   ├── js/
+│   └── img/
+│
+├── docs/               # Dokumentasi
+│   └── api.md         # Dokumentasi API
+│
+├── requirements.txt    # Dependencies
+├── manage.py          # Django CLI
+├── .env              # Environment variables
+├── .gitignore       # Git ignore rules
+└── README.md        # Dokumentasi proyek
+```
+
+Struktur file di atas menunjukkan organisasi kode dalam proyek:
+
+- `bukutamu/`: Root proyek Django
+- `tamu/`: Aplikasi utama yang berisi logika bisnis
+- `templates/`: File-file template HTML
+- `static/`: File statis (CSS, JavaScript, gambar)
+- `media/`: File yang diupload user
+- `docs/`: Dokumentasi proyek
+- File konfigurasi lainnya di root proyek
+
+### Penjelasan File Utama
+
+1. **Settings & URLs**
+   - `settings.py`: Konfigurasi utama Django
+   - `urls.py`: Routing URL utama
+   - `api_urls.py`: Routing untuk API endpoints
+
+2. **Models & Forms**
+   - `models.py`: Definisi model database
+   - `forms.py`: Form untuk input data
+   - `serializers.py`: Serializer untuk API
+
+3. **Views & Templates**
+   - `views.py`: Logic untuk handle request
+   - `templates/*.html`: Template untuk UI
+   - `static/*`: Asset statis (CSS/JS)
+
+4. **Utilities**
+   - `utils.py`: Fungsi helper
+   - `notifications.py`: Handler notifikasi
+   - `permissions.py`: Custom permissions
+   - `middleware.py`: Custom middleware
+
+5. **Configuration**
+   - `.env`: Environment variables
+   - `requirements.txt`: Dependencies
+   - `.gitignore`: File yang diabaikan Git
+
+
 ## Kontribusi
 
 Silakan berkontribusi dengan membuat pull request atau melaporkan issue.
