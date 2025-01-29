@@ -45,44 +45,37 @@ Aplikasi Buku Tamu ini memiliki beberapa fitur utama:
 - JWT Authentication
 - Bootstrap Icons
 
-## Setup Environment
+## Langkah-langkah Instalasi
 
-### Prasyarat
-1. Python 3.13
-2. MySQL/MariaDB
-3. Visual Studio Code
-4. Git
+### 1. Setup Environment
 
-### Setup VSCode
+```bash
+# Buat direktori proyek
+mkdir bukutamu_django
+cd bukutamu_django
 
-1. Install ekstensi yang diperlukan:
-   - Python (ms-python.python)
-   - Django (batisteo.vscode-django)
-   - MySQL (cweijan.vscode-mysql-client2)
-   - Git (eamodio.gitlens)
-   - Live Server (ritwickdey.liveserver)
+# Buat virtual environment
+python -m venv venv
 
-2. Konfigurasi ekstensi Python:
-   ```json
-   {
-     "python.linting.enabled": true,
-     "python.linting.pylintEnabled": true,
-     "python.formatting.provider": "black",
-     "python.formatting.blackArgs": ["--line-length", "100"],
-     "editor.formatOnSave": true,
-     "[python]": {
-       "editor.defaultFormatter": "ms-python.python"
-     }
-   }
-   ```
+# Aktifkan virtual environment
+# Windows:
+venv\Scripts\activate
+# Linux/Mac:
+source venv/bin/activate
+```
 
-3. Setup Git di VSCode:
-   - Login ke GitHub
-   - Konfigurasi user.name dan user.email
-   - Setup SSH key jika diperlukan
+### 2. Install Dependencies
 
-### Setup Database
-1. Buat database baru:
+```bash
+# Install Django
+pip install Django==4.2.0
+
+# Install semua dependencies
+pip install -r requirements.txt
+```
+
+### 3. Setup Database MySQL
+
 ```sql
 CREATE DATABASE bukutamu_django;
 CREATE USER 'arvino'@'localhost' IDENTIFIED BY 'arvino1345';
@@ -90,28 +83,10 @@ GRANT ALL PRIVILEGES ON bukutamu_django.* TO 'arvino'@'localhost';
 FLUSH PRIVILEGES;
 ```
 
-## Setup Aplikasi
+### 4. Konfigurasi Proyek
 
-1. Clone repositori:
-```bash
-git clone https://github.com/arvino/bukutamu-django.git
-cd bukutamu-django
-```
-
-2. Buat virtual environment:
-```bash
-python -m venv venv
-source venv/bin/activate  # Linux/Mac
-venv\Scripts\activate     # Windows
-```
-
-3. Install dependensi:
-```bash
-pip install -r requirements.txt
-```
-
-4. Setup environment variables (.env):
-```
+1. Buat file `.env` di root proyek:
+```env
 SECRET_KEY=your-secret-key-here
 DEBUG=True
 DB_NAME=bukutamu_django
@@ -127,215 +102,94 @@ EMAIL_USER=your_email@gmail.com
 EMAIL_PASSWORD=your_app_password
 ```
 
-5. Jalankan migrasi:
+2. Jalankan migrasi database:
 ```bash
 python manage.py makemigrations
 python manage.py migrate
 ```
 
-6. Buat superuser:
+3. Buat superuser:
 ```bash
 python manage.py createsuperuser
 ```
 
-7. Jalankan server:
+4. Jalankan development server:
 ```bash
 python manage.py runserver
 ```
 
-## Flow Aplikasi
+## Struktur URL
 
-### 1. Flow Pengunjung
-- Mengakses halaman utama (/)
-- Melihat daftar pesan tamu
-- Melihat detail pesan dan gambar
-- Opsi untuk register/login
-
-### 2. Flow Member
-- Register akun baru
-  - Isi form registrasi
-  - Terima email selamat datang
-  - Login dengan akun baru
-- Login ke dashboard member
-  - Lihat riwayat pesan
-  - Submit pesan baru (1x sehari)
-  - Upload gambar dengan preview
-  - Edit/hapus pesan sendiri
-- Update profil
-  - Edit informasi pribadi
-  - Ganti password
-
-### 3. Flow Admin
-- Login sebagai admin
-- Akses dashboard admin
-  - Lihat semua pesan
-  - Filter dan cari pesan
-  - Export data (CSV/Excel/PDF)
-- Manajemen member
-  - Lihat daftar member
-  - Aktifkan/nonaktifkan member
-  - Reset password member
-- Terima notifikasi
-  - Email untuk member baru
-  - Telegram untuk pesan baru
-
-### 4. Flow API
-- Autentikasi dengan JWT
-- Akses endpoint CRUD
-- Upload file via API
-- Refresh token
-
-## Struktur Database
-
-### Tabel Member
-- nama (CharField)
-- phone (CharField)
-- email (EmailField)
-- password (CharField)
-- role (CharField)
-
-### Tabel BukuTamu
-- member_id (ForeignKey)
-- messages (TextField)
-- gambar (ImageField)
-- timestamp (DateTimeField)
+- `/` - Halaman publik
+- `/login/` - Halaman login
+- `/register/` - Halaman registrasi
+- `/member/` - Dashboard member
+- `/admin-dashboard/` - Dashboard admin
+- `/profile/` - Halaman profil
+- `/submit/` - Form submit pesan
+- `/edit/<id>/` - Form edit pesan
 
 ## API Endpoints
 
-- `POST /api/token/` - Mendapatkan token JWT
-- `POST /api/token/refresh/` - Refresh token JWT
+- `POST /api/token/` - Get JWT token
+- `POST /api/token/refresh/` - Refresh JWT token
 - `GET /api/bukutamu/` - List semua pesan
 - `POST /api/bukutamu/` - Tambah pesan baru
 - `GET /api/bukutamu/{id}/` - Detail pesan
 - `PUT /api/bukutamu/{id}/` - Update pesan
 - `DELETE /api/bukutamu/{id}/` - Hapus pesan
-- `GET /api/members/` - List member (admin only)
 
-## Pengembangan Selanjutnya
+## Troubleshooting
 
-- Implementasi email verification
-- Fitur lupa password
-- Export data ke PDF/Excel
-- Integrasi dengan media sosial
-- Sistem komentar
-- Notifikasi real-time
-- Unit testing
-- Deployment guide
+### Error Database
+```bash
+# Reset database
+python manage.py flush
 
-
-## Struktur File Proyek
-
-```
-bukutamu/
-├── bukutamu/                  # Project root
-│   ├── __init__.py
-│   ├── settings.py           # Konfigurasi proyek
-│   ├── urls.py              # URL router utama
-│   ├── asgi.py             # ASGI config
-│   └── wsgi.py             # WSGI config
-│
-├── tamu/                     # Aplikasi utama
-│   ├── migrations/          # Database migrations
-│   ├── templates/          # Template HTML
-│   │   ├── tamu/
-│   │   │   ├── base.html              # Template dasar
-│   │   │   ├── public_list.html       # Halaman publik
-│   │   │   ├── register.html          # Form registrasi
-│   │   │   ├── member_dashboard.html  # Dashboard member
-│   │   │   ├── admin_dashboard.html   # Dashboard admin
-│   │   │   ├── submit_entry.html      # Form input pesan
-│   │   │   ├── edit_entry.html        # Form edit pesan
-│   │   │   └── profile.html           # Halaman profil
-│   │   ├── registration/
-│   │   │   └── login.html             # Form login
-│   │   └── emails/
-│   │       ├── welcome.html           # Template email welcome
-│   │       └── new_entry.html         # Template notifikasi
-│   │
-│   ├── static/             # File statis
-│   │   ├── css/
-│   │   ├── js/
-│   │   └── img/
-│   │
-│   ├── __init__.py
-│   ├── admin.py           # Konfigurasi admin
-│   ├── apps.py           # Konfigurasi aplikasi
-│   ├── forms.py          # Form definitions
-│   ├── models.py         # Model database
-│   ├── views.py          # View handlers
-│   ├── urls.py           # URL patterns
-│   ├── api_urls.py       # API endpoints
-│   ├── permissions.py    # Custom permissions
-│   ├── serializers.py    # API serializers
-│   ├── middleware.py     # Custom middleware
-│   ├── utils.py          # Utility functions
-│   ├── notifications.py  # Notification handlers
-│   └── context_processors.py  # Template context
-│
-├── media/                # Upload files
-│   └── bukutamu/        # Gambar pesan
-│
-├── static/              # Project static files
-│   ├── css/
-│   ├── js/
-│   └── img/
-│
-├── docs/               # Dokumentasi
-│   └── api.md         # Dokumentasi API
-│
-├── requirements.txt    # Dependencies
-├── manage.py          # Django CLI
-├── .env              # Environment variables
-├── .gitignore       # Git ignore rules
-└── README.md        # Dokumentasi proyek
+# Recreate migrations
+python manage.py makemigrations
+python manage.py migrate
 ```
 
-Struktur file di atas menunjukkan organisasi kode dalam proyek:
+### Error Dependencies
+```bash
+# Update pip
+python -m pip install --upgrade pip
 
-- `bukutamu/`: Root proyek Django
-- `tamu/`: Aplikasi utama yang berisi logika bisnis
-- `templates/`: File-file template HTML
-- `static/`: File statis (CSS, JavaScript, gambar)
-- `media/`: File yang diupload user
-- `docs/`: Dokumentasi proyek
-- File konfigurasi lainnya di root proyek
+# Install dependencies satu per satu
+pip install Django==4.2.0
+pip install mysqlclient==2.2.0
+pip install djangorestframework==3.14.0
+pip install Pillow
+```
 
-### Penjelasan File Utama
+### Error Static Files
+```bash
+python manage.py collectstatic
+```
 
-1. **Settings & URLs**
-   - `settings.py`: Konfigurasi utama Django
-   - `urls.py`: Routing URL utama
-   - `api_urls.py`: Routing untuk API endpoints
+## Keamanan
 
-2. **Models & Forms**
-   - `models.py`: Definisi model database
-   - `forms.py`: Form untuk input data
-   - `serializers.py`: Serializer untuk API
+- Gunakan HTTPS di production
+- Ganti SECRET_KEY
+- Nonaktifkan DEBUG di production
+- Batasi upload file
+- Validasi input user
+- Rate limiting API
 
-3. **Views & Templates**
-   - `views.py`: Logic untuk handle request
-   - `templates/*.html`: Template untuk UI
-   - `static/*`: Asset statis (CSS/JS)
+## Maintenance
 
-4. **Utilities**
-   - `utils.py`: Fungsi helper
-   - `notifications.py`: Handler notifikasi
-   - `permissions.py`: Custom permissions
-   - `middleware.py`: Custom middleware
-
-5. **Configuration**
-   - `.env`: Environment variables
-   - `requirements.txt`: Dependencies
-   - `.gitignore`: File yang diabaikan Git
-
+- Backup database secara berkala
+- Monitor error logs
+- Update dependencies
+- Bersihkan file media yang tidak terpakai
+- Optimalkan query database
 
 ## Kontribusi
 
 Silakan berkontribusi dengan membuat pull request atau melaporkan issue.
 
-## Lisensi
 
-[MIT License](LICENSE)
 
 ## Dibuat Oleh
 - Developer Name : Arvino Zulka

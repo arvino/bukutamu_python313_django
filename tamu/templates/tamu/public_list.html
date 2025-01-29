@@ -1,0 +1,40 @@
+{% extends 'tamu/base.html' %}
+
+{% block title %}Daftar Buku Tamu{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2 class="mb-4">Pesan Terbaru</h2>
+    </div>
+</div>
+
+<div class="row">
+    {% if tamu_list %}
+        {% for entry in tamu_list %}
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    {% if entry.gambar %}
+                        <img src="{{ entry.gambar.url }}" class="card-img-top entry-image" alt="Gambar">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ entry.member.username }}</h5>
+                        <p class="card-text">{{ entry.messages }}</p>
+                        <p class="card-text">
+                            <small class="text-muted">
+                                <i class="bi bi-clock"></i> {{ entry.timestamp|date:"d M Y H:i" }}
+                            </small>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="col-12">
+            <div class="alert alert-info">
+                Belum ada pesan yang ditambahkan.
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %} 

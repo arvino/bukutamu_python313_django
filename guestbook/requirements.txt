@@ -3,7 +3,7 @@ mysqlclient==2.2.0
 djangorestframework==3.14.0
 djangorestframework-simplejwt==5.3.0
 Pillow
-python-dotenv==1.0.0  # Untuk mengelola environment variables
-django-cors-headers==4.2.0  # Untuk API CORS 
+python-dotenv==1.0.0
+django-cors-headers==4.2.0
 XlsxWriter==3.1.2
 reportlab==4.0.4 
